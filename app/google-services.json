@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "383458906376",
+    "firebase_url": "https://fursie-3a841.firebaseio.com",
+    "project_id": "fursie-3a841",
+    "storage_bucket": "fursie-3a841.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:383458906376:android:db097623de2f0ace",
+        "android_client_info": {
+          "package_name": "com.seef.fursie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "383458906376-1asubpcbkprbjbgmje6u4k58tua67amc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.seef.fursie",
+            "certificate_hash": "F12E78C163353C648E36A9F1C506E8C09F14F3C0"
+          }
+        },
+        {
+          "client_id": "383458906376-ae3eun84bpf7c1eq81b9o79dkelf3gnh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAaQfobKclY-nWTLlxGV-FKdnoannUYlY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "383458906376-ae3eun84bpf7c1eq81b9o79dkelf3gnh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

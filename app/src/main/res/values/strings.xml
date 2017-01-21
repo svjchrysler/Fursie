@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Fursie</string>
+    <string name="apikey_google_maps">AIzaSyDgpgjalYTyYpSzRNHelbiZniFJAY0XN6U</string>
 </resources>
