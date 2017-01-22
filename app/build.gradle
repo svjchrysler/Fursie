@@ -2,6 +2,12 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
+        google_maps {
+            keyAlias 'fursie'
+            keyPassword 'k3yl0gg3r'
+            storeFile file('/Users/jhonsalguero/Projects/Android/keystore/fursie.jks')
+            storePassword 'k3yl0gg3r'
+        }
     }
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -12,13 +18,16 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.google_maps
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.google_maps
         }
         debug {
+            signingConfig signingConfigs.google_maps
         }
     }
     productFlavors {

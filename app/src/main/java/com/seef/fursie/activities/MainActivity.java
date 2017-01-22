@@ -9,21 +9,21 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
-import com.arsy.maps_library.MapRipple;
+import com.arsy.maps_library.MapRadar;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.seef.fursie.Position;
 import com.seef.fursie.R;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
-
+    private MapRadar mapRadar;
     private GoogleMap googleMap;
-    private MapRipple mapRipple;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +39,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void configMap() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+
         mapFragment.getMapAsync(this);
     }
 
     public void setLocation(Location location) {
         if (location.getLongitude() != 0.0 && location.getLatitude() != 0.0) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 14));
+            googleMap.setBuildingsEnabled(true);
             googleMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())));
+            mapRadar.withLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+            if (!mapRadar.isAnimationRunning()) {
+                mapRadar.withDistance(2000);
+                mapRadar.startRadarAnimation();
+            }
         }
     }
 
@@ -60,10 +68,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        if (mapRadar.isAnimationRunning())
+            mapRadar.stopRadarAnimation();
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
-        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
+        this.googleMap.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json)
+        );
+        mapRadar = new MapRadar(this.googleMap, new LatLng(-17.783471, -63.181579), this);
         configPosition();
     }
 }
