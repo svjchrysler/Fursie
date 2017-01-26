@@ -11,17 +11,20 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import com.arsy.maps_library.MapRadar;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.seef.fursie.Position;
 import com.seef.fursie.R;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+import org.aaronhe.rxgooglemapsbinding.RxGoogleMaps;
+
+import rx.Observable;
+import rx.functions.Func1;
+
+public class MainActivity extends AppCompatActivity {
     private MapRadar mapRadar;
     private GoogleMap googleMap;
 
@@ -39,14 +42,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void configMap() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        RxGoogleMaps.mapReady(mapFragment).flatMap(new Func1<GoogleMap, Observable<CameraPosition>>() {
 
-        mapFragment.getMapAsync(this);
+            @Override
+            public Observable<CameraPosition> call(GoogleMap googleMap) {
+                return RxGoogleMaps.cameraPositionChanges(googleMap);
+            }
+
+        })
+        .flatMap(new Func1<MarkerOptions, Observable<MarkerOptions>>() {
+            @Override
+            public Observable<MarkerOptions> call(MarkerOptions cameraPosition) {
+                return new MarkerOptions().position(new LatLng(44,44));
+            }
+        });
     }
 
     public void setLocation(Location location) {
         if (location.getLongitude() != 0.0 && location.getLatitude() != 0.0) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 14));
-            googleMap.setBuildingsEnabled(true);
             googleMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())));
             mapRadar.withLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
             if (!mapRadar.isAnimationRunning()) {
@@ -74,13 +87,4 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mapRadar.stopRadarAnimation();
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        this.googleMap = googleMap;
-        this.googleMap.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json)
-        );
-        mapRadar = new MapRadar(this.googleMap, new LatLng(-17.783471, -63.181579), this);
-        configPosition();
-    }
 }
